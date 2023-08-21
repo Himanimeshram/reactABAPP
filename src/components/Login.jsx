@@ -38,6 +38,10 @@ const Login = () => {
     }
   };
 
+  const handleSignupClick = () => {
+    navigate('/signup'); // Navigate to the signup page
+  };
+
   return (
     <div className="container login-container">
       <div className="row justify-content-center">
@@ -69,6 +73,16 @@ const Login = () => {
                 <button type="submit" className="btn btn-primary">Login</button>
                 {error && <div className="text-danger mt-2">{error}</div>}
               </form>
+              <p className="mt-3">
+                Don't have an account?{' '}
+                <button
+                  type="button"
+                  className="btn btn-link"
+                  onClick={handleSignupClick}
+                >
+                  Sign Up
+                </button>
+              </p>
             </div>
           </div>
         </div>
