@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import { Link, useNavigate } from 'react-router-dom';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Signup = () => {
+  const history = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -10,10 +12,11 @@ const Signup = () => {
     firstName: '',
     lastName: '',
     phoneNumber: '',
-    role: '',
+    role: 'customer', // Set a default role or change as needed
   });
 
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -36,15 +39,17 @@ const Signup = () => {
       });
 
       const data = await response.json();
-      setMessage(data.message);
 
       if (response.ok) {
+        setMessage('Signup successful');
         // Redirect to login page after successful signup
-        window.location.href = '/';
+        history.push('/');
+      } else {
+        setError(data.detail); // Display the error message from the server
       }
     } catch (error) {
       console.error('Error signing up:', error);
-      setMessage('An error occurred during signup.');
+      setError('An error occurred during signup.');
     }
   };
 
@@ -61,6 +66,7 @@ const Signup = () => {
             className="form-control"
             value={formData.username}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="mb-3">
@@ -72,6 +78,7 @@ const Signup = () => {
             className="form-control"
             value={formData.firstName}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="mb-3">
@@ -83,6 +90,7 @@ const Signup = () => {
             className="form-control"
             value={formData.lastName}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="mb-3">
@@ -94,17 +102,19 @@ const Signup = () => {
             className="form-control"
             value={formData.password}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="mb-3">
-          <label htmlFor="emailId" className="form-label">Email:</label>
+          <label htmlFor="email" className="form-label">Email:</label>
           <input
-            type="text"
+            type="email"
             id="email"
             name="email"
             className="form-control"
             value={formData.email}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="mb-3">
@@ -116,25 +126,30 @@ const Signup = () => {
             className="form-control"
             value={formData.phoneNumber}
             onChange={handleChange}
+            required
           />
         </div>
         <div className="mb-3">
           <label htmlFor="role" className="form-label">Role:</label>
-          <input
-            type="tel"
+          <select
             id="role"
             name="role"
-            className="form-control"
+            className="form-select"
             value={formData.role}
             onChange={handleChange}
-          />
+          >
+            <option value="customer">Customer</option>
+            <option value="company">Company</option>
+            {/* Add more role options if needed */}
+          </select>
         </div>
         <button type="submit" className="btn btn-primary">Sign Up</button>
       </form>
+      {message && <p className="mt-3 text-success">{message}</p>}
+      {error && <p className="mt-3 text-danger">{error}</p>}
       <p className="mt-3">
         Already have an account? <Link to="/" className="btn btn-link">Log In</Link>
       </p>
-      <p>{message}</p>
     </div>
   );
 };
